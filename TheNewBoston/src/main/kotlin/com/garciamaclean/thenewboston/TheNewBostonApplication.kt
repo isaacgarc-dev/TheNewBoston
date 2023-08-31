@@ -1,4 +1,4 @@
-package com.garciamaclean.TheNewBoston
+package com.garciamaclean.thenewboston
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
