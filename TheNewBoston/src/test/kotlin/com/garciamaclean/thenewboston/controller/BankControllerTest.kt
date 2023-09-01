@@ -166,6 +166,24 @@ class BankControllerTest @Autowired constructor(
                     }
                 }
         }
+
+        @Test
+        fun `should return BAD REQUEST if patching bank does not exists`() {
+            // given
+            val invalidBank = Bank("does_not_exists", 1.0, 1)
+
+            // when
+            val performPost = mockMvc.patch(baseURL){
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(invalidBank)
+            }
+
+            //  then
+            performPost
+                .andDo { print() }
+                .andExpect { status { isNotFound() }}
+
+        }
     }
 
 }
