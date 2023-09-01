@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.PatchMapping
 import kotlin.IllegalArgumentException
 
 @RestController
@@ -36,4 +37,7 @@ class BankController(private val service: BankService) {
     @ResponseStatus(HttpStatus.CREATED)
     fun addBank(@RequestBody bank: Bank): Bank = service.addBank(bank)
 
+
+    @PatchMapping
+    fun updateBank(@RequestBody bank: Bank): Bank = service.updateBank(bank)
 }
