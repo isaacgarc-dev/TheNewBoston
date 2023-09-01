@@ -6,9 +6,13 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MockDataSource: BankDataSource {
-    val banks = listOf(Bank("2213", 0.0 ,0))
-    override fun retrieveBanks(): Collection<Bank> {
-        return banks
-    }
+    val banks = listOf(
+        Bank("2213", 3.14 ,17),
+        Bank("1234", 23.14 ,4),
+        Bank("1111", 3.2 ,2)
+    )
+    override fun retrieveBanks(): Collection<Bank> = banks
 
+    override fun retrieveBank(accountNumber: String): Bank =
+        banks.first { it.accountNumber == accountNumber }
 }
