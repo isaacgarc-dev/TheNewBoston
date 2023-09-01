@@ -17,6 +17,7 @@ class BankControllerTest {
 
     @Autowired
     lateinit var mockMvc : MockMvc
+    val baseURL = "/api/banks"
 
     @Nested
     @DisplayName("getBanks()")
@@ -26,7 +27,7 @@ class BankControllerTest {
         @Test
         fun `should return all banks`() {
             // when, then
-            mockMvc.get("/api/banks")
+            mockMvc.get(baseURL)
                 .andDo {print()}
                 .andExpect {
                     status { isOk() }
@@ -48,7 +49,7 @@ class BankControllerTest {
             val accountNumber = 2213
 
             // when / then
-            mockMvc.get("/api/banks/$accountNumber")
+            mockMvc.get("$baseURL/$accountNumber")
                 .andDo { print() }
                 .andExpect {
                     status { isOk() }
@@ -56,6 +57,18 @@ class BankControllerTest {
                     jsonPath("$.trust") { value(3.14) }
                     jsonPath("$.transactionFee") { value(17)}
                 }
+        }
+        
+        @Test
+        fun `should return NOT FOUND when account number does not exists`() {
+            // given
+            val accountNumber = "does not exists"
+            
+            // when / then
+            mockMvc.get("$baseURL/$accountNumber")
+                .andDo { print() }
+                .andExpect { status { isNotFound() } }
+            
         }
         
     }
