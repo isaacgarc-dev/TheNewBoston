@@ -11,13 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.patch
-import org.springframework.test.web.servlet.post
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.web.servlet.*
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class BankControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
@@ -183,6 +182,41 @@ class BankControllerTest @Autowired constructor(
                 .andDo { print() }
                 .andExpect { status { isNotFound() }}
 
+        }
+    }
+    
+    @Nested
+    @DisplayName("DELETE /api/banks/{accountNumber}")
+    @TestInstance(Lifecycle.PER_CLASS)
+    inner class DeleteAnExistingBank {
+    
+        @Test
+        fun `should delete the bank with the given accountNumber`() {
+            // given
+            val accountNumber = 2213
+            
+            // when / then
+            mockMvc.delete("$baseURL/$accountNumber")
+                .andDo { print() }
+                .andExpect {
+                    status {isNoContent()}
+                }
+
+            mockMvc.get("$baseURL/$accountNumber")
+                .andExpect { status { isNotFound() } }
+        }
+
+        @Test
+        fun `should return NOT FOUND if no bank with given account number exists`() {
+            // given
+            val accountNumber = "does_not_exist"
+
+            // when / then
+            mockMvc.delete("$baseURL/$accountNumber")
+                .andDo { print() }
+                .andExpect {
+                    status { isNotFound() }
+                }
         }
     }
 
